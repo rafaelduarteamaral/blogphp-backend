@@ -22,6 +22,7 @@ routes.post('/logout', usersController.logout);
  * Criação dos post
  */
 routes.post('/articles', articlesController.create);
+routes.put('/articles/:id', articlesController.update);
 routes.get('/articles/:id', articlesController.index);
 routes.get('/articles', articlesController.index);
 routes.delete('/articles/:id', articlesController.delete);

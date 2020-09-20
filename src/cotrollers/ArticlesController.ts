@@ -42,11 +42,39 @@ class ArticlesController {
     }
   }
 
+  async update(req: Request, res: Response) {
+    const id = req.params.id;
+    const {
+      title,
+      img,
+      text
+    } = req.body;
+
+    const trx = await db.transaction();
+
+    try {
+
+      const updatedArticleIds = await trx('articles').where('id', id).update({
+        title,
+        img,
+        text
+      });
+
+      await trx.commit();
+
+      return res.status(200).send();
+    } catch (err) {
+      return res.status(400).json({
+        error: 'unexpected error while update Article'
+      });
+    }
+  }
+
   async delete(req: Request, res: Response) {
     await db('articles').where({ id: req.params.id }).del();
     return res.status(204).send();
-
   }
+  
 }
 
 export default ArticlesController;

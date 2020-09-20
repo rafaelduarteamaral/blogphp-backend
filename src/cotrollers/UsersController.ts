@@ -10,17 +10,18 @@ interface User {
 class UsersController {
 
     async login(req: Request, res: Response) {
-        const users = await db('users').select('*').where('name', req.body.user).andWhere('password', req.body.password);
-        if(users[0]) {
-            const id = users[0].id;
-            var token = jwt.sign({ id }, secret, {
-                expiresIn: 300
-            });
-
-            console.log('Fez login e gerou token!');
-            return res.status(200).send({auth: true, token:token}) 
+        try {
+            const users = await db('users').select('*').where('name', req.body.user).andWhere('password', req.body.password);
+            if(users[0]) {
+                const id = users[0].id;
+                var token = jwt.sign({ id }, secret, {
+                    expiresIn: 300
+                });
+                return res.status(200).send({auth: true, token:token}) 
+            }
+        } catch(error) {
+            res.status(401).send('Login invalido')
         }
-        res.status(401).send('Login invalido')
     }
 
     async create(req: Request, res: Response) {
